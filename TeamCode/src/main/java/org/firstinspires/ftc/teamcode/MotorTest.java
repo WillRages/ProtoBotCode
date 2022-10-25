@@ -15,6 +15,7 @@ public class MotorTest extends OpMode {
     private DcMotor FRDrive = null;
     private DcMotor FLDrive = null;
     private DcMotor BRDrive = null;
+    private DcMotor VertLift = null;
 
 
     @Override
@@ -27,6 +28,8 @@ public class MotorTest extends OpMode {
         FRDrive  = hardwareMap.get(DcMotor.class, "FRDrive");
         FLDrive  = hardwareMap.get(DcMotor.class, "FLDrive");
         BRDrive  = hardwareMap.get(DcMotor.class, "BRDrive");
+        VertLift  = hardwareMap.get(DcMotor.class, "VertLift");
+
 
 
 
@@ -34,6 +37,7 @@ public class MotorTest extends OpMode {
         BRDrive.setDirection(DcMotor.Direction.REVERSE);
         FRDrive.setDirection(DcMotor.Direction.REVERSE);
         FLDrive.setDirection(DcMotor.Direction.FORWARD);
+        VertLift.setDirection(DcMotor.Direction.FORWARD);
 
 
 
@@ -56,10 +60,13 @@ public class MotorTest extends OpMode {
         // Retrieve lift values from controller
 
         //Retrieve driving values from controller
-        double y = gamepad1.left_stick_y * .8; // Remember, this is reversed!
-        double x = gamepad1.left_stick_x * .8; // Counteract imperfect strafing
+        double y = gamepad1.left_stick_y * .8; // Is reversed
+        double x = gamepad1.left_stick_x * .8;// Counteract imperfect strafing
         double rx = -gamepad1.right_stick_x * .8;
-
+        boolean up;
+        boolean down;
+        up = (gamepad1.left_trigger > 0);
+        down = (gamepad1.right_trigger > 0);
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio, but only when at least one is out
         // of the range [-1, 1]
@@ -76,16 +83,14 @@ public class MotorTest extends OpMode {
 
 
 
-        /*
-
-        if (Forward && !Reverse) {
-            testMotor.setPower(0.65);
-        } else if (!Forward && Reverse){
-            testMotor.setPower(-0.65);
+        if (down && !up) {
+            VertLift.setPower(0.65);
+        } else if (!down && up){
+            VertLift.setPower(-0.65);
         }else{
-            testMotor.setPower(0);
+            VertLift.setPower(0);
         }
-        */
+
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -100,6 +105,7 @@ public class MotorTest extends OpMode {
         FRDrive.setPower(0);
         BLDrive.setPower(0);
         BRDrive.setPower(0);
+        VertLift.setPower(0);
 
     }
 }
